@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/go-resty/resty/v2"
+	_ "github.com/joho/godotenv/autoload" // Import .env file if one exists
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
