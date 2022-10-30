@@ -66,8 +66,16 @@ func epg(c echo.Context) error {
 	} else {
 		xmlData := resp.String()
 		// Now we need to do string replacement on imagecache stuff.
+
+		var scheme string
+		if c.Request().URL.Scheme == "" {
+			scheme = "http"
+		} else {
+			scheme = c.Request().URL.Scheme
+		}
+
 		oldStr := fmt.Sprintf("%s/imagecache/", tvhServer)
-		newStr := fmt.Sprintf("%s/imagecache/", c.Request().Host)
+		newStr := fmt.Sprintf("%s://%s/imagecache/", scheme, c.Request().Host)
 		fmt.Printf("Replacing '%s' with '%s'", oldStr, newStr)
 		new := strings.ReplaceAll(xmlData, oldStr, newStr)
 
