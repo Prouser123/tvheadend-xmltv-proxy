@@ -7,8 +7,8 @@ COPY go.sum ./
 
 RUN go mod download
 
-COPY src ./
+COPY *.go ./
 
-RUN go build -o /tvheadend-xmltv-proxy src
+RUN go build -o /tvheadend-xmltv-proxy
 
 CMD ["/tvheadend-xmltv-proxy"]
