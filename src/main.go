@@ -51,6 +51,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	e.GET("/epg.xml", epg)
+	e.GET("/imagecache/:id", imagecache)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
@@ -80,5 +81,20 @@ func epg(c echo.Context) error {
 		new := strings.ReplaceAll(xmlData, oldStr, newStr)
 
 		return c.String(http.StatusOK, new)
+	}
+}
+
+func imagecache(c echo.Context) error {
+	// Request the image from tvh
+	client := resty.New()
+
+	resp, err := client.R().Get(fmt.Sprintf("%s/imagecache/%s", tvhServerAuthUrl, c.Param("id")))
+
+	if err != nil {
+		return c.NoContent(500)
+	} else {
+		image := resp.Body()
+		contentType := resp.RawResponse.Header.Get("content-type")
+		return c.Blob(200, contentType, image)
 	}
 }
