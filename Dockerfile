@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine
+FROM golang:1.19 as build
 
 WORKDIR /app
 
@@ -9,6 +9,10 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN go build -o /tvheadend-xmltv-proxy
+RUN CGO_ENABLED=0 go build -ldflags "-s -w" -o /app/app
 
-CMD ["/tvheadend-xmltv-proxy"]
+FROM gcr.io/distroless/static-debian11
+
+COPY --from=build /app/app /app
+
+CMD ["/app"]
